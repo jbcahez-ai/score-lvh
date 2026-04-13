@@ -7,18 +7,19 @@
   <style>
     :root {
       --bg: #172d5b;
+      --bg-2: #223b75;
+      --bg-3: #102244;
       --panel: #f0a21c;
-      --panel-dark: #d88d12;
-      --text-light: #f9f7f2;
-      --text-dark: #171717;
-      --muted: rgba(255,255,255,0.12);
-      --success: #2fb36f;
-      --danger: #d94b4b;
-      --shadow: 0 18px 40px rgba(0,0,0,0.22);
+      --panel-2: #f6b84b;
+      --text: #f8f6f1;
+      --muted: rgba(255,255,255,0.72);
+      --card: rgba(255,255,255,0.08);
+      --card-border: rgba(255,255,255,0.1);
+      --shadow: 0 16px 40px rgba(0,0,0,0.22);
       --radius-xl: 28px;
-      --radius-lg: 20px;
+      --radius-lg: 22px;
       --radius-md: 16px;
-      --max-width: 1400px;
+      --radius-sm: 12px;
     }
 
     * { box-sizing: border-box; }
@@ -27,207 +28,127 @@
       margin: 0;
       min-height: 100%;
       font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
-      background: radial-gradient(circle at top left, #223b75 0%, var(--bg) 48%, #102244 100%);
-      color: var(--text-light);
+      background: radial-gradient(circle at top left, var(--bg-2) 0%, var(--bg) 45%, var(--bg-3) 100%);
+      color: var(--text);
     }
 
     body {
-      min-height: 100vh;
-      padding: 18px;
+      padding: 16px;
+      overflow-x: hidden;
     }
 
     .app {
-      width: 100%;
-      max-width: var(--max-width);
+      max-width: 1480px;
       margin: 0 auto;
     }
 
-    .screen {
-      display: none;
-    }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-    .screen.active {
-      display: block;
+    .chalk {
+      font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+      letter-spacing: 0.4px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.14);
     }
 
     .hero {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 18px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
+      gap: 10px;
       margin-bottom: 24px;
+      animation: fadeInUp 0.55s ease;
     }
 
-    .badge {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid rgba(255,255,255,0.9);
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.04);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .badge::before {
-      content: "QUIZ";
-      position: absolute;
-      top: 16px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      font-size: 20px;
-      color: var(--panel);
-    }
-
-    .badge::after {
-      content: "SÉRIES TV";
-      position: absolute;
-      bottom: 18px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      font-size: 13px;
-      color: var(--text-light);
-    }
-
-    .badge-inner {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 6px solid var(--panel);
-      transform: rotate(-18deg);
-      position: relative;
-    }
-
-    .badge-inner::before,
-    .badge-inner::after {
-      content: "";
-      position: absolute;
-      background: var(--panel);
-      border-radius: 999px;
-    }
-
-    .badge-inner::before {
-      width: 68px;
-      height: 9px;
-      left: -8px;
-      top: 11px;
-    }
-
-    .badge-inner::after {
-      width: 16px;
-      height: 16px;
-      right: -9px;
-      bottom: -2px;
-    }
-
-    h1, h2, h3, .chalk {
-      font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.12);
+    .logo {
+      width: 170px;
+      max-width: 42vw;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18));
     }
 
     .title {
-      font-size: clamp(2rem, 5vw, 4.5rem);
       margin: 0;
+      font-size: clamp(2.1rem, 5vw, 4.2rem);
       line-height: 1;
     }
 
     .subtitle {
-      margin: 10px 0 0;
-      color: rgba(255,255,255,0.82);
-      font-size: clamp(1rem, 2vw, 1.25rem);
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.1vw, 1.18rem);
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .card,
-    .panel {
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-    }
-
-    .card {
+    .setup-shell {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
-      padding: 24px;
+      border-radius: var(--radius-xl);
+      padding: 26px;
+      box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
-    }
-
-    .panel {
-      background: linear-gradient(180deg, #f4a821 0%, var(--panel) 100%);
-      color: var(--text-dark);
-      padding: 24px;
-      min-height: 100%;
+      animation: fadeInUp 0.65s ease;
     }
 
     .section-title {
-      margin-top: 0;
+      margin: 0 0 8px;
       font-size: clamp(1.6rem, 3vw, 2.4rem);
     }
 
-    .helper {
-      margin-top: -8px;
-      color: rgba(255,255,255,0.76);
+    .section-help {
+      margin: 0 0 20px;
+      color: var(--muted);
       line-height: 1.5;
-    }
-
-    .helper.dark {
-      color: rgba(0,0,0,0.72);
     }
 
     .form-grid {
       display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 16px;
-      margin-top: 18px;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
     }
 
     label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-weight: 800;
       font-size: 0.98rem;
     }
 
-    input,
-    select,
-    button {
+    input, select, button {
       font: inherit;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
       border: 0;
-      outline: none;
+      outline: 0;
       border-radius: var(--radius-md);
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.95);
+      padding: 14px 15px;
+      background: rgba(255,255,255,0.96);
       color: #111;
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.04);
+      transition: box-shadow 0.16s ease, transform 0.16s ease;
     }
 
-    input:focus,
-    select:focus {
-      box-shadow: inset 0 0 0 2px var(--panel), 0 0 0 3px rgba(240,162,28,0.18);
+    input:focus, select:focus {
+      box-shadow: inset 0 0 0 2px var(--panel), 0 0 0 4px rgba(240,162,28,0.16);
+      transform: translateY(-1px);
     }
 
     .team-list-editor {
       display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .team-editor-row {
       display: grid;
-      grid-template-columns: 70px 1fr;
-      gap: 12px;
+      grid-template-columns: 64px 1fr;
+      gap: 10px;
       align-items: center;
     }
 
@@ -237,9 +158,9 @@
       place-items: center;
       border-radius: var(--radius-md);
       background: rgba(255,255,255,0.08);
-      font-weight: 900;
       color: var(--panel);
-      letter-spacing: 1px;
+      font-weight: 900;
+      font-size: 1rem;
     }
 
     .button-row {
@@ -252,65 +173,59 @@
     .btn {
       border: 0;
       border-radius: 999px;
-      padding: 14px 22px;
-      font-weight: 800;
+      padding: 13px 20px;
+      font-weight: 900;
       cursor: pointer;
-      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
     }
 
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(1px); }
 
     .btn-primary {
-      background: var(--panel);
-      color: #111;
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      color: #121212;
     }
 
     .btn-secondary {
       background: rgba(255,255,255,0.1);
-      color: var(--text-light);
-      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .btn-dark {
-      background: #101010;
-      color: #fff;
-    }
-
-    .config-summary {
-      display: grid;
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .summary-pill {
-      background: rgba(255,255,255,0.12);
-      border-radius: 999px;
-      padding: 12px 16px;
-      font-weight: 700;
-      color: var(--text-light);
-      display: inline-flex;
-      width: fit-content;
+    .scoreboard-shell {
+      animation: fadeInUp 0.45s ease;
     }
 
     .scoreboard-header {
-      display: flex;
-      gap: 16px;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-xl);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
     }
 
-    .scoreboard-title {
+    .scoreboard-header .logo {
+      width: 95px;
+      max-width: 95px;
+    }
+
+    .scoreboard-main-title {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.6rem);
+      font-size: clamp(1.7rem, 4vw, 3.25rem);
       line-height: 1;
     }
 
-    .scoreboard-sub {
+    .scoreboard-subtitle {
       margin: 8px 0 0;
-      color: rgba(255,255,255,0.78);
+      color: var(--muted);
+      font-size: 1rem;
     }
 
     .scoreboard-actions {
@@ -322,178 +237,194 @@
 
     .teams-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
     }
 
     .team-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-xl);
-      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 14px;
       box-shadow: var(--shadow);
       display: grid;
-      gap: 14px;
-      min-height: 200px;
+      gap: 10px;
+      min-height: 176px;
+      animation: cardIn 0.32s ease;
+    }
+
+    .team-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 7px;
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      opacity: 0.92;
+    }
+
+    .team-card.top-1 {
+      box-shadow: 0 18px 44px rgba(0,0,0,0.26), 0 0 0 1px rgba(240,162,28,0.3);
     }
 
     .team-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .team-name {
-      margin: 0;
-      font-size: clamp(1.3rem, 2.2vw, 2rem);
-      word-break: break-word;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 12px;
+      align-items: start;
     }
 
     .rank-badge {
-      min-width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      background: var(--panel);
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
       color: #111;
       font-weight: 900;
-      font-size: 1.2rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      font-size: 1.15rem;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    .team-name-wrap {
+      min-width: 0;
+    }
+
+    .team-name {
+      margin: 2px 0 0;
+      font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+      line-height: 1.15;
+      word-break: break-word;
+    }
+
+    .team-rank-label {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
     }
 
     .score-box {
+      border-radius: 18px;
+      background: rgba(0,0,0,0.12);
+      border: 1px solid rgba(255,255,255,0.06);
+      min-height: 66px;
       display: grid;
       place-items: center;
-      min-height: 84px;
-      background: rgba(0,0,0,0.12);
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.07);
+      padding: 6px;
     }
 
     .score-value {
-      font-size: clamp(2.4rem, 5vw, 4.6rem);
-      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3.2rem);
       line-height: 1;
+      font-weight: 900;
       color: var(--panel);
-      text-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transform-origin: center;
+    }
+
+    .score-value.bump {
+      animation: bump 0.26s ease;
     }
 
     .score-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
     }
 
     .score-btn {
-      min-height: 64px;
+      min-height: 52px;
       border: 0;
-      border-radius: 18px;
-      font-size: 1.8rem;
+      border-radius: 16px;
+      font-size: 1.55rem;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
-      transition: transform 0.16s ease, filter 0.16s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.18);
+      transition: transform 0.14s ease, filter 0.14s ease;
     }
 
-    .score-btn:hover { filter: brightness(1.02); }
-    .score-btn:active { transform: scale(0.98); }
+    .score-btn:hover { filter: brightness(1.03); }
+    .score-btn:active { transform: scale(0.97); }
 
     .score-btn.minus {
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.92);
       color: #111;
     }
 
     .score-btn.plus {
-      background: var(--panel);
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
       color: #111;
     }
 
     .footer-note {
-      margin-top: 18px;
+      margin-top: 14px;
       color: rgba(255,255,255,0.62);
-      font-size: 0.95rem;
       text-align: center;
+      font-size: 0.94rem;
     }
 
-    .hide {
-      display: none !important;
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 1024px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+    @keyframes cardIn {
+      from { opacity: 0; transform: scale(0.985); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
+    @keyframes bump {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 1050px) {
       .teams-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .scoreboard-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .scoreboard-header .logo {
+        justify-self: center;
+      }
+
+      .scoreboard-actions {
+        justify-content: center;
+      }
     }
 
-    @media (max-width: 720px) {
-      body {
-        padding: 12px;
-      }
+    @media (max-width: 760px) {
+      body { padding: 12px; }
 
-      .hero {
-        grid-template-columns: 88px 1fr;
-        gap: 14px;
-      }
+      .logo { width: 130px; }
 
-      .badge {
-        width: 88px;
-        height: 88px;
-      }
+      .setup-shell,
+      .scoreboard-header { padding: 18px; }
 
-      .badge::before {
-        top: 11px;
-        font-size: 15px;
-      }
-
-      .badge::after {
-        bottom: 12px;
-        font-size: 9px;
-      }
-
-      .badge-inner {
-        width: 44px;
-        height: 44px;
-        border-width: 5px;
-      }
-
-      .badge-inner::before {
-        width: 47px;
-        height: 7px;
-        top: 7px;
-      }
-
-      .badge-inner::after {
-        width: 12px;
-        height: 12px;
-      }
-
+      .form-grid,
+      .team-list-editor,
       .teams-grid {
         grid-template-columns: 1fr;
       }
 
-      .scoreboard-header {
-        flex-direction: column;
+      .team-editor-row {
+        grid-template-columns: 58px 1fr;
       }
 
-      .scoreboard-actions {
-        width: 100%;
-        justify-content: stretch;
+      .team-card {
+        min-height: 162px;
       }
 
       .scoreboard-actions .btn {
         flex: 1 1 180px;
-      }
-    }
-
-    @media (orientation: landscape) and (min-width: 900px) {
-      .team-card {
-        min-height: 185px;
       }
     }
   </style>
@@ -502,75 +433,63 @@
   <div class="app">
     <section id="setupScreen" class="screen active">
       <div class="hero">
-        <div class="badge"><div class="badge-inner"></div></div>
-        <div>
-          <h1 class="title chalk">Quiz Séries TV</h1>
-          <p class="subtitle">Crée ton tournoi, ajoute tes équipes et lance un affichage score en plein écran.</p>
-        </div>
+        <img src="logo.png" alt="Logo Le Voyage Heure" class="logo" />
+        <h1 class="title chalk">Quiz Séries TV</h1>
+        <p class="subtitle">Crée ton tournoi, ajoute tes équipes et lance un affichage score en direct.</p>
       </div>
 
-      <div class="layout">
-        <div class="card">
-          <h2 class="section-title chalk">Configuration</h2>
-          <p class="helper">Renseigne le nom de l'événement, choisis le nombre d'équipes, puis donne un nom à chaque équipe.</p>
+      <div class="setup-shell">
+        <h2 class="section-title chalk">Configuration du quiz</h2>
+        <p class="section-help">Renseigne le nom du tournoi, le nombre d'équipes, puis le nom de chaque équipe. Ensuite, passe à l'écran score pour afficher le classement en direct sur tablette ou télévision.</p>
 
-          <div class="form-grid">
-            <div>
-              <label for="eventName">Nom du tournoi / quiz</label>
-              <input id="eventName" type="text" placeholder="Ex. Quiz Séries TV - Jeudi soir" maxlength="60" />
-            </div>
-
-            <div>
-              <label for="teamCount">Nombre d'équipes</label>
-              <select id="teamCount"></select>
-            </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="eventName">Nom du tournoi / quiz</label>
+            <input id="eventName" type="text" placeholder="Ex. Quiz séries TV - Jeudi soir" maxlength="60" />
           </div>
-
-          <div id="teamInputs" class="team-list-editor"></div>
-
-          <div class="button-row">
-            <button id="nextBtn" class="btn btn-primary">Suivant</button>
-            <button id="demoBtn" class="btn btn-secondary">Charger une démo</button>
+          <div class="field">
+            <label for="teamCount">Nombre d'équipes</label>
+            <select id="teamCount"></select>
           </div>
         </div>
 
-        <div class="panel">
-          <h2 class="section-title chalk">Ambiance graphique</h2>
-          <p class="helper dark">Le style reprend l'univers de ton visuel : fond bleu nuit, grand panneau orange arrondi, typographie esprit craie, et mise en avant des scores pour un affichage propre sur tablette ou télé.</p>
+        <div id="teamInputs" class="team-list-editor"></div>
 
-          <div class="config-summary">
-            <div class="summary-pill">Mode tablette</div>
-            <div class="summary-pill">Lecture à distance</div>
-            <div class="summary-pill">Plein écran TV</div>
-            <div class="summary-pill">Scores modifiables en direct</div>
-          </div>
+        <div class="button-row">
+          <button id="nextBtn" class="btn btn-primary">Suivant</button>
+          <button id="demoBtn" class="btn btn-secondary">Charger une démo</button>
         </div>
       </div>
     </section>
 
     <section id="scoreScreen" class="screen">
-      <div class="scoreboard-header">
-        <div>
-          <h1 id="scoreboardTitle" class="scoreboard-title chalk">Tournoi</h1>
-          <p id="scoreboardSubtitle" class="scoreboard-sub">0 équipe</p>
+      <div class="scoreboard-shell">
+        <div class="scoreboard-header">
+          <img src="logo.png" alt="Logo Le Voyage Heure" class="logo" />
+
+          <div>
+            <h1 id="scoreboardTitle" class="scoreboard-main-title chalk">Tournoi</h1>
+            <p id="scoreboardSubtitle" class="scoreboard-subtitle">0 équipe</p>
+          </div>
+
+          <div class="scoreboard-actions">
+            <button id="backBtn" class="btn btn-secondary">Équipes</button>
+            <button id="resetBtn" class="btn btn-secondary">Remise à zéro</button>
+            <button id="fullscreenBtn" class="btn btn-primary">Plein écran</button>
+          </div>
         </div>
 
-        <div class="scoreboard-actions">
-          <button id="backBtn" class="btn btn-secondary">Modifier les équipes</button>
-          <button id="resetBtn" class="btn btn-secondary">Remettre à zéro</button>
-          <button id="fullscreenBtn" class="btn btn-primary">Plein écran</button>
-        </div>
+        <div id="teamsGrid" class="teams-grid"></div>
+        <p class="footer-note">Affichage pensé pour être casté sur une TV dans le bar et suivi en direct par tout le monde.</p>
       </div>
-
-      <div id="teamsGrid" class="teams-grid"></div>
-      <p class="footer-note">Astuce : caste simplement cet écran sur la télé du bar pour afficher le classement en direct.</p>
     </section>
   </div>
 
   <script>
     const state = {
       eventName: "",
-      teams: []
+      teams: [],
+      lastChangedIndex: null
     };
 
     const setupScreen = document.getElementById("setupScreen");
@@ -582,11 +501,11 @@
     const scoreboardTitle = document.getElementById("scoreboardTitle");
     const scoreboardSubtitle = document.getElementById("scoreboardSubtitle");
 
-    for (let i = 2; i <= 16; i++) {
+    for (let i = 2; i <= 18; i++) {
       const option = document.createElement("option");
       option.value = String(i);
       option.textContent = String(i);
-      if (i === 4) option.selected = true;
+      if (i === 6) option.selected = true;
       teamCountSelect.appendChild(option);
     }
 
@@ -624,7 +543,7 @@
       }
     }
 
-    function getRankMap(teams) {
+    function getRanks(teams) {
       const sorted = [...teams]
         .map((team, index) => ({ index, score: team.score }))
         .sort((a, b) => b.score - a.score);
@@ -642,27 +561,38 @@
       return rankMap;
     }
 
+    function rankLabel(rank) {
+      if (rank === 1) return "1re place";
+      return `${rank}e place`;
+    }
+
     function renderScoreboard() {
       scoreboardTitle.textContent = state.eventName || "Tournoi";
-      scoreboardSubtitle.textContent = `${state.teams.length} équipe${state.teams.length > 1 ? "s" : ""}`;
+      scoreboardSubtitle.textContent = `${state.teams.length} équipe${state.teams.length > 1 ? "s" : ""} · classement en direct`;
 
+      const rankMap = getRanks(state.teams);
       const orderedTeams = state.teams
-        .map((team, index) => ({ ...team, originalIndex: index }))
+        .map((team, index) => ({ ...team, originalIndex: index, rank: rankMap.get(index) || 1 }))
         .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, "fr"));
 
-      const rankMap = getRankMap(state.teams);
-
       teamsGrid.innerHTML = orderedTeams.map((team) => {
-        const rank = rankMap.get(team.originalIndex) || 1;
+        const isTop = team.rank === 1 ? "top-1" : "";
+        const bumpClass = state.lastChangedIndex === team.originalIndex ? "bump" : "";
+
         return `
-          <article class="team-card">
+          <article class="team-card ${isTop}">
             <div class="team-top">
-              <h2 class="team-name chalk">${escapeHtml(team.name)}</h2>
-              <div class="rank-badge">${rank}</div>
+              <div class="rank-badge">${team.rank}</div>
+              <div class="team-name-wrap">
+                <h2 class="team-name chalk">${escapeHtml(team.name)}</h2>
+                <div class="team-rank-label">${rankLabel(team.rank)}</div>
+              </div>
             </div>
+
             <div class="score-box">
-              <div class="score-value">${team.score}</div>
+              <div class="score-value ${bumpClass}">${team.score}</div>
             </div>
+
             <div class="score-controls">
               <button class="score-btn minus" data-action="minus" data-index="${team.originalIndex}" aria-label="Retirer un point à ${escapeHtml(team.name)}">−</button>
               <button class="score-btn plus" data-action="plus" data-index="${team.originalIndex}" aria-label="Ajouter un point à ${escapeHtml(team.name)}">+</button>
@@ -670,23 +600,19 @@
           </article>
         `;
       }).join("");
-    }
 
-    function showScoreScreen() {
-      setupScreen.classList.remove("active");
-      scoreScreen.classList.add("active");
-      renderScoreboard();
-      persist();
-    }
-
-    function showSetupScreen() {
-      scoreScreen.classList.remove("active");
-      setupScreen.classList.add("active");
-      persist();
+      if (state.lastChangedIndex !== null) {
+        setTimeout(() => {
+          state.lastChangedIndex = null;
+        }, 260);
+      }
     }
 
     function persist() {
-      localStorage.setItem("quiz-scoreboard-state", JSON.stringify(state));
+      localStorage.setItem("quiz-scoreboard-state", JSON.stringify({
+        eventName: state.eventName,
+        teams: state.teams
+      }));
     }
 
     function loadPersistedState() {
@@ -710,7 +636,7 @@
     function syncFormFromState() {
       if (!state.teams.length) return;
       eventNameInput.value = state.eventName;
-      teamCountSelect.value = String(Math.min(Math.max(state.teams.length, 2), 16));
+      teamCountSelect.value = String(Math.min(Math.max(state.teams.length, 2), 18));
       renderTeamInputs();
       const inputs = Array.from(teamInputs.querySelectorAll("input"));
       inputs.forEach((input, index) => {
@@ -731,6 +657,19 @@
         name,
         score: previousScores.get(name) || 0
       }));
+
+      persist();
+    }
+
+    function showSetupScreen() {
+      scoreScreen.classList.remove("active");
+      setupScreen.classList.add("active");
+    }
+
+    function showScoreScreen() {
+      setupScreen.classList.remove("active");
+      scoreScreen.classList.add("active");
+      renderScoreboard();
     }
 
     document.getElementById("nextBtn").addEventListener("click", () => {
@@ -739,25 +678,25 @@
     });
 
     document.getElementById("demoBtn").addEventListener("click", () => {
-      eventNameInput.value = "Quiz Séries TV - Bar du Centre";
-      teamCountSelect.value = "4";
+      eventNameInput.value = "Quiz Séries TV - Le Voyage Heure";
+      teamCountSelect.value = "6";
       renderTeamInputs();
-      const demoNames = ["Les 456", "Team Hawkins", "Peaky Quizzers", "Les Dragons"];
+      const demoNames = ["Les 456", "Peaky Quizzers", "Team Hawkins", "Les Dragons", "Casa d'Ambiance", "Upside Down"];
       Array.from(teamInputs.querySelectorAll("input")).forEach((input, index) => {
         input.value = demoNames[index] || `Équipe ${index + 1}`;
       });
     });
 
     document.getElementById("backBtn").addEventListener("click", () => {
-      collectFormData();
       syncFormFromState();
       showSetupScreen();
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
       state.teams = state.teams.map((team) => ({ ...team, score: 0 }));
-      renderScoreboard();
+      state.lastChangedIndex = null;
       persist();
+      renderScoreboard();
     });
 
     document.getElementById("fullscreenBtn").addEventListener("click", async () => {
@@ -768,7 +707,7 @@
           await document.exitFullscreen();
         }
       } catch (error) {
-        console.warn("Le plein écran n'est pas disponible sur cet appareil.", error);
+        console.warn("Plein écran indisponible sur cet appareil.", error);
       }
     });
 
@@ -783,8 +722,9 @@
       if (action === "plus") state.teams[index].score += 1;
       if (action === "minus") state.teams[index].score = Math.max(0, state.teams[index].score - 1);
 
-      renderScoreboard();
+      state.lastChangedIndex = index;
       persist();
+      renderScoreboard();
     });
 
     teamCountSelect.addEventListener("change", renderTeamInputs);
