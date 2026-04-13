@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Quiz Séries TV</title>
+  <style>
+    :root {
+      --bg: #172d5b;
+      --panel: #f0a21c;
+      --panel-dark: #d88d12;
+      --text-light: #f9f7f2;
+      --text-dark: #171717;
+      --muted: rgba(255,255,255,0.12);
+      --success: #2fb36f;
+      --danger: #d94b4b;
+      --shadow: 0 18px 40px rgba(0,0,0,0.22);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --max-width: 1400px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at top left, #223b75 0%, var(--bg) 48%, #102244 100%);
+      color: var(--text-light);
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.9);
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.04);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge::before {
+      content: "QUIZ";
+      position: absolute;
+      top: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      font-size: 20px;
+      color: var(--panel);
+    }
+
+    .badge::after {
+      content: "SÉRIES TV";
+      position: absolute;
+      bottom: 18px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .badge-inner {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 6px solid var(--panel);
+      transform: rotate(-18deg);
+      position: relative;
+    }
+
+    .badge-inner::before,
+    .badge-inner::after {
+      content: "";
+      position: absolute;
+      background: var(--panel);
+      border-radius: 999px;
+    }
+
+    .badge-inner::before {
+      width: 68px;
+      height: 9px;
+      left: -8px;
+      top: 11px;
+    }
+
+    .badge-inner::after {
+      width: 16px;
+      height: 16px;
+      right: -9px;
+      bottom: -2px;
+    }
+
+    h1, h2, h3, .chalk {
+      font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.12);
+    }
+
+    .title {
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.82);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card,
+    .panel {
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel {
+      background: linear-gradient(180deg, #f4a821 0%, var(--panel) 100%);
+      color: var(--text-dark);
+      padding: 24px;
+      min-height: 100%;
+    }
+
+    .section-title {
+      margin-top: 0;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+    }
+
+    .helper {
+      margin-top: -8px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.5;
+    }
+
+    .helper.dark {
+      color: rgba(0,0,0,0.72);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+
+    input,
+    select,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 0;
+      outline: none;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.95);
+      color: #111;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+    }
+
+    input:focus,
+    select:focus {
+      box-shadow: inset 0 0 0 2px var(--panel), 0 0 0 3px rgba(240,162,28,0.18);
+    }
+
+    .team-list-editor {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .team-editor-row {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .team-index {
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.08);
+      font-weight: 900;
+      color: var(--panel);
+      letter-spacing: 1px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-primary {
+      background: var(--panel);
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-light);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .btn-dark {
+      background: #101010;
+      color: #fff;
+    }
+
+    .config-summary {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .summary-pill {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-light);
+      display: inline-flex;
+      width: fit-content;
+    }
+
+    .scoreboard-header {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .scoreboard-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1;
+    }
+
+    .scoreboard-sub {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .scoreboard-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .team-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 14px;
+      min-height: 200px;
+    }
+
+    .team-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .team-name {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.2vw, 2rem);
+      word-break: break-word;
+    }
+
+    .rank-badge {
+      min-width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--panel);
+      color: #111;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .score-box {
+      display: grid;
+      place-items: center;
+      min-height: 84px;
+      background: rgba(0,0,0,0.12);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .score-value {
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--panel);
+      text-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .score-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .score-btn {
+      min-height: 64px;
+      border: 0;
+      border-radius: 18px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    .score-btn:hover { filter: brightness(1.02); }
+    .score-btn:active { transform: scale(0.98); }
+
+    .score-btn.minus {
+      background: rgba(255,255,255,0.9);
+      color: #111;
+    }
+
+    .score-btn.plus {
+      background: var(--panel);
+      color: #111;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(255,255,255,0.62);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .teams-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 12px;
+      }
+
+      .hero {
+        grid-template-columns: 88px 1fr;
+        gap: 14px;
+      }
+
+      .badge {
+        width: 88px;
+        height: 88px;
+      }
+
+      .badge::before {
+        top: 11px;
+        font-size: 15px;
+      }
+
+      .badge::after {
+        bottom: 12px;
+        font-size: 9px;
+      }
+
+      .badge-inner {
+        width: 44px;
+        height: 44px;
+        border-width: 5px;
+      }
+
+      .badge-inner::before {
+        width: 47px;
+        height: 7px;
+        top: 7px;
+      }
+
+      .badge-inner::after {
+        width: 12px;
+        height: 12px;
+      }
+
+      .teams-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scoreboard-header {
+        flex-direction: column;
+      }
+
+      .scoreboard-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .scoreboard-actions .btn {
+        flex: 1 1 180px;
+      }
+    }
+
+    @media (orientation: landscape) and (min-width: 900px) {
+      .team-card {
+        min-height: 185px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="setupScreen" class="screen active">
+      <div class="hero">
+        <div class="badge"><div class="badge-inner"></div></div>
+        <div>
+          <h1 class="title chalk">Quiz Séries TV</h1>
+          <p class="subtitle">Crée ton tournoi, ajoute tes équipes et lance un affichage score en plein écran.</p>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="card">
+          <h2 class="section-title chalk">Configuration</h2>
+          <p class="helper">Renseigne le nom de l'événement, choisis le nombre d'équipes, puis donne un nom à chaque équipe.</p>
+
+          <div class="form-grid">
+            <div>
+              <label for="eventName">Nom du tournoi / quiz</label>
+              <input id="eventName" type="text" placeholder="Ex. Quiz Séries TV - Jeudi soir" maxlength="60" />
+            </div>
+
+            <div>
+              <label for="teamCount">Nombre d'équipes</label>
+              <select id="teamCount"></select>
+            </div>
+          </div>
+
+          <div id="teamInputs" class="team-list-editor"></div>
+
+          <div class="button-row">
+            <button id="nextBtn" class="btn btn-primary">Suivant</button>
+            <button id="demoBtn" class="btn btn-secondary">Charger une démo</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="section-title chalk">Ambiance graphique</h2>
+          <p class="helper dark">Le style reprend l'univers de ton visuel : fond bleu nuit, grand panneau orange arrondi, typographie esprit craie, et mise en avant des scores pour un affichage propre sur tablette ou télé.</p>
+
+          <div class="config-summary">
+            <div class="summary-pill">Mode tablette</div>
+            <div class="summary-pill">Lecture à distance</div>
+            <div class="summary-pill">Plein écran TV</div>
+            <div class="summary-pill">Scores modifiables en direct</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scoreScreen" class="screen">
+      <div class="scoreboard-header">
+        <div>
+          <h1 id="scoreboardTitle" class="scoreboard-title chalk">Tournoi</h1>
+          <p id="scoreboardSubtitle" class="scoreboard-sub">0 équipe</p>
+        </div>
+
+        <div class="scoreboard-actions">
+          <button id="backBtn" class="btn btn-secondary">Modifier les équipes</button>
+          <button id="resetBtn" class="btn btn-secondary">Remettre à zéro</button>
+          <button id="fullscreenBtn" class="btn btn-primary">Plein écran</button>
+        </div>
+      </div>
+
+      <div id="teamsGrid" class="teams-grid"></div>
+      <p class="footer-note">Astuce : caste simplement cet écran sur la télé du bar pour afficher le classement en direct.</p>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      eventName: "",
+      teams: []
+    };
+
+    const setupScreen = document.getElementById("setupScreen");
+    const scoreScreen = document.getElementById("scoreScreen");
+    const eventNameInput = document.getElementById("eventName");
+    const teamCountSelect = document.getElementById("teamCount");
+    const teamInputs = document.getElementById("teamInputs");
+    const teamsGrid = document.getElementById("teamsGrid");
+    const scoreboardTitle = document.getElementById("scoreboardTitle");
+    const scoreboardSubtitle = document.getElementById("scoreboardSubtitle");
+
+    for (let i = 2; i <= 16; i++) {
+      const option = document.createElement("option");
+      option.value = String(i);
+      option.textContent = String(i);
+      if (i === 4) option.selected = true;
+      teamCountSelect.appendChild(option);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderTeamInputs() {
+      const count = Number(teamCountSelect.value);
+      const previous = Array.from(teamInputs.querySelectorAll("input")).map((input) => input.value);
+      teamInputs.innerHTML = "";
+
+      for (let i = 0; i < count; i++) {
+        const row = document.createElement("div");
+        row.className = "team-editor-row";
+
+        const index = document.createElement("div");
+        index.className = "team-index chalk";
+        index.textContent = `E${i + 1}`;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 30;
+        input.placeholder = `Nom de l'équipe ${i + 1}`;
+        input.value = previous[i] || `Équipe ${i + 1}`;
+
+        row.appendChild(index);
+        row.appendChild(input);
+        teamInputs.appendChild(row);
+      }
+    }
+
+    function getRankMap(teams) {
+      const sorted = [...teams]
+        .map((team, index) => ({ index, score: team.score }))
+        .sort((a, b) => b.score - a.score);
+
+      const rankMap = new Map();
+      let currentRank = 1;
+
+      sorted.forEach((item, i) => {
+        if (i > 0 && item.score < sorted[i - 1].score) {
+          currentRank = i + 1;
+        }
+        rankMap.set(item.index, currentRank);
+      });
+
+      return rankMap;
+    }
+
+    function renderScoreboard() {
+      scoreboardTitle.textContent = state.eventName || "Tournoi";
+      scoreboardSubtitle.textContent = `${state.teams.length} équipe${state.teams.length > 1 ? "s" : ""}`;
+
+      const orderedTeams = state.teams
+        .map((team, index) => ({ ...team, originalIndex: index }))
+        .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, "fr"));
+
+      const rankMap = getRankMap(state.teams);
+
+      teamsGrid.innerHTML = orderedTeams.map((team) => {
+        const rank = rankMap.get(team.originalIndex) || 1;
+        return `
+          <article class="team-card">
+            <div class="team-top">
+              <h2 class="team-name chalk">${escapeHtml(team.name)}</h2>
+              <div class="rank-badge">${rank}</div>
+            </div>
+            <div class="score-box">
+              <div class="score-value">${team.score}</div>
+            </div>
+            <div class="score-controls">
+              <button class="score-btn minus" data-action="minus" data-index="${team.originalIndex}" aria-label="Retirer un point à ${escapeHtml(team.name)}">−</button>
+              <button class="score-btn plus" data-action="plus" data-index="${team.originalIndex}" aria-label="Ajouter un point à ${escapeHtml(team.name)}">+</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function showScoreScreen() {
+      setupScreen.classList.remove("active");
+      scoreScreen.classList.add("active");
+      renderScoreboard();
+      persist();
+    }
+
+    function showSetupScreen() {
+      scoreScreen.classList.remove("active");
+      setupScreen.classList.add("active");
+      persist();
+    }
+
+    function persist() {
+      localStorage.setItem("quiz-scoreboard-state", JSON.stringify(state));
+    }
+
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem("quiz-scoreboard-state");
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.teams)) return;
+        state.eventName = typeof parsed.eventName === "string" ? parsed.eventName : "";
+        state.teams = parsed.teams
+          .filter((team) => team && typeof team.name === "string")
+          .map((team, index) => ({
+            name: team.name || `Équipe ${index + 1}`,
+            score: Number.isFinite(team.score) ? Math.max(0, team.score) : 0
+          }));
+      } catch (error) {
+        console.warn("Impossible de charger la sauvegarde locale.", error);
+      }
+    }
+
+    function syncFormFromState() {
+      if (!state.teams.length) return;
+      eventNameInput.value = state.eventName;
+      teamCountSelect.value = String(Math.min(Math.max(state.teams.length, 2), 16));
+      renderTeamInputs();
+      const inputs = Array.from(teamInputs.querySelectorAll("input"));
+      inputs.forEach((input, index) => {
+        input.value = state.teams[index]?.name || `Équipe ${index + 1}`;
+      });
+    }
+
+    function collectFormData() {
+      const names = Array.from(teamInputs.querySelectorAll("input")).map((input, index) => {
+        const value = input.value.trim();
+        return value || `Équipe ${index + 1}`;
+      });
+
+      state.eventName = eventNameInput.value.trim() || "Tournoi";
+
+      const previousScores = new Map(state.teams.map((team) => [team.name, team.score]));
+      state.teams = names.map((name) => ({
+        name,
+        score: previousScores.get(name) || 0
+      }));
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      collectFormData();
+      showScoreScreen();
+    });
+
+    document.getElementById("demoBtn").addEventListener("click", () => {
+      eventNameInput.value = "Quiz Séries TV - Bar du Centre";
+      teamCountSelect.value = "4";
+      renderTeamInputs();
+      const demoNames = ["Les 456", "Team Hawkins", "Peaky Quizzers", "Les Dragons"];
+      Array.from(teamInputs.querySelectorAll("input")).forEach((input, index) => {
+        input.value = demoNames[index] || `Équipe ${index + 1}`;
+      });
+    });
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      collectFormData();
+      syncFormFromState();
+      showSetupScreen();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      state.teams = state.teams.map((team) => ({ ...team, score: 0 }));
+      renderScoreboard();
+      persist();
+    });
+
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (error) {
+        console.warn("Le plein écran n'est pas disponible sur cet appareil.", error);
+      }
+    });
+
+    teamsGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const index = Number(button.dataset.index);
+      const action = button.dataset.action;
+      if (!Number.isInteger(index) || !state.teams[index]) return;
+
+      if (action === "plus") state.teams[index].score += 1;
+      if (action === "minus") state.teams[index].score = Math.max(0, state.teams[index].score - 1);
+
+      renderScoreboard();
+      persist();
+    });
+
+    teamCountSelect.addEventListener("change", renderTeamInputs);
+
+    loadPersistedState();
+    renderTeamInputs();
+    syncFormFromState();
+
+    if (state.teams.length) {
+      showScoreScreen();
+    }
+  </script>
+</body>
+</html>
