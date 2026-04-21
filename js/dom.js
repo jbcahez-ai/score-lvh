@@ -1,0 +1,13 @@
+export const setupScreen = document.getElementById("setupScreen");
+export const scoreScreen = document.getElementById("scoreScreen");
+export const eventNameInput = document.getElementById("eventName");
+export const teamCountSelect = document.getElementById("teamCount");
+export const teamInputs = document.getElementById("teamInputs");
+export const teamsGrid = document.getElementById("teamsGrid");
+export const scoreboardTitle = document.getElementById("scoreboardTitle");
+export const scoreboardSubtitle = document.getElementById("scoreboardSubtitle");
+export const nextBtn = document.getElementById("nextBtn");
+export const demoBtn = document.getElementById("demoBtn");
+export const backBtn = document.getElementById("backBtn");
+export const resetBtn = document.getElementById("resetBtn");
+export const fullscreenBtn = document.getElementById("fullscreenBtn");
