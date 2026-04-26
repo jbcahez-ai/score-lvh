@@ -277,6 +277,10 @@ select:focus {
   animation: fadeInUp 0.4s ease;
 }
 
+.ranking-block.collapsed .ranking-list {
+  display: none;
+}
+
 .ranking-header {
   display: flex;
   justify-content: space-between;
@@ -284,6 +288,33 @@ select:focus {
   gap: 14px;
   margin-bottom: 12px;
   flex-wrap: wrap;
+}
+
+.ranking-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.ranking-toggle {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--panel);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: grid;
+  place-items: center;
+}
+
+.ranking-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ranking-toggle:active {
+  transform: scale(0.92);
 }
 
 .ranking-title {
@@ -495,6 +526,188 @@ select:focus {
   color: rgba(255, 255, 255, 0.62);
   text-align: center;
   font-size: 0.94rem;
+}
+
+/* Podium Screen */
+.podium-shell {
+  animation: fadeInUp 0.45s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.podium-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.podium-header .logo {
+  width: 120px;
+  max-width: 120px;
+}
+
+.podium-title {
+  margin: 16px 0 0;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  color: var(--panel);
+}
+
+.podium-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.podium-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 24px 32px 100px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  border: 2px solid var(--team-color, var(--panel));
+  border-radius: 24px 24px 8px 8px;
+  min-width: 180px;
+  animation: podiumIn 0.6s ease backwards;
+}
+
+.podium-card.first {
+  order: 2;
+  min-height: 320px;
+  padding-bottom: 140px;
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.08));
+  border-color: #ffd700;
+  animation-delay: 0.2s;
+}
+
+.podium-card.second {
+  order: 1;
+  min-height: 260px;
+  padding-bottom: 80px;
+  animation-delay: 0.1s;
+}
+
+.podium-card.third {
+  order: 3;
+  min-height: 220px;
+  padding-bottom: 40px;
+  animation-delay: 0.3s;
+}
+
+.podium-rank {
+  position: absolute;
+  top: -20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #111;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.podium-card.first .podium-rank {
+  width: 72px;
+  height: 72px;
+  font-size: 2.2rem;
+  background: linear-gradient(180deg, #ffd700, #ffaa00);
+}
+
+.podium-card.second .podium-rank {
+  background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
+}
+
+.podium-card.third .podium-rank {
+  background: linear-gradient(180deg, #cd7f32, #a05a20);
+}
+
+.podium-team-name {
+  margin-top: 16px;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  text-align: center;
+  word-break: break-word;
+}
+
+.podium-score {
+  margin-top: 8px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--team-color, var(--panel));
+}
+
+.podium-pillar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60px;
+  background: linear-gradient(180deg, var(--team-color, var(--panel)), rgba(0, 0, 0, 0.3));
+  border-radius: 0 0 8px 8px;
+}
+
+.podium-card.first .podium-pillar {
+  height: 100px;
+  background: linear-gradient(180deg, #ffd700, #cc9900);
+}
+
+.podium-card.second .podium-pillar {
+  background: linear-gradient(180deg, #c0c0c0, #808080);
+}
+
+.podium-card.third .podium-pillar {
+  background: linear-gradient(180deg, #cd7f32, #8b4513);
+}
+
+.podium-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  top: -20px;
+  width: 12px;
+  height: 12px;
+  background: var(--confetti-color);
+  animation: confettiFall linear forwards;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes podiumIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes fadeInUp {

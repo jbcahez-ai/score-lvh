@@ -34,12 +34,24 @@ export function renderScoreboard(state) {
     rankingBlock.className = "ranking-block";
     rankingBlock.innerHTML = `
       <div class="ranking-header">
-        <h2 class="ranking-title chalk">Classement</h2>
-        <p class="ranking-help">Le classement se met à jour en direct selon les scores.</p>
+        <button id="rankingToggle" class="ranking-toggle" aria-label="Masquer le classement">
+          <span class="ranking-toggle-icon">▼</span>
+        </button>
+        <div class="ranking-title-wrap">
+          <h2 class="ranking-title chalk">Classement</h2>
+          <p class="ranking-help">Le classement se met à jour en direct selon les scores.</p>
+        </div>
       </div>
       <div id="rankingList" class="ranking-list"></div>
     `;
     teamsGrid.parentNode.insertBefore(rankingBlock, teamsGrid);
+    
+    // Add toggle event listener
+    document.getElementById("rankingToggle").addEventListener("click", () => {
+      rankingBlock.classList.toggle("collapsed");
+      const icon = rankingBlock.querySelector(".ranking-toggle-icon");
+      icon.textContent = rankingBlock.classList.contains("collapsed") ? "▶" : "▼";
+    });
   }
 
   document.getElementById("rankingList").innerHTML = rankingHtml;
