@@ -155,7 +155,7 @@ select:focus {
 
 .team-editor-row {
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: 64px 52px 1fr;
   gap: 10px;
   align-items: center;
 }
@@ -169,6 +169,25 @@ select:focus {
   color: var(--panel);
   font-weight: 900;
   font-size: 1rem;
+}
+
+.team-color {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: transparent;
+}
+
+.team-color::-webkit-color-swatch-wrapper {
+  padding: 4px;
+}
+
+.team-color::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--radius-sm);
 }
 
 .button-row {
@@ -295,6 +314,15 @@ select:focus {
   padding: 10px 12px;
 }
 
+.ranking-row::before {
+  content: "";
+  width: 6px;
+  height: 34px;
+  border-radius: 4px;
+  background: var(--team-color, var(--panel));
+  flex-shrink: 0;
+}
+
 .ranking-row.leader {
   box-shadow: 0 0 0 1px rgba(240, 162, 28, 0.28);
   background: rgba(240, 162, 28, 0.12);
@@ -313,7 +341,7 @@ select:focus {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  background: linear-gradient(180deg, var(--team-color, var(--panel-2)), var(--team-color, var(--panel)));
   color: #111;
   font-weight: 900;
   flex: 0 0 auto;
@@ -359,7 +387,7 @@ select:focus {
   position: absolute;
   inset: 0 auto 0 0;
   width: 7px;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  background: linear-gradient(180deg, var(--team-color, var(--panel-2)), var(--team-color, var(--panel)));
   opacity: 0.92;
 }
 

@@ -1,4 +1,5 @@
 import { scoreboardSubtitle, scoreboardTitle, teamsGrid } from "./dom.js";
+import { defaultColors } from "./state.js";
 import { escapeHtml, getRanks, rankLabel } from "./utils.js";
 
 export function renderScoreboard(state) {
@@ -11,11 +12,12 @@ export function renderScoreboard(state) {
     .map((team, index) => ({
       name: team.name,
       score: team.score,
-      rank: rankMap.get(index) || 1
+      rank: rankMap.get(index) || 1,
+      color: team.color || defaultColors[index % defaultColors.length]
     }))
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, "fr"))
     .map((team) => `
-      <div class="ranking-row ${team.rank === 1 ? "leader" : ""}">
+      <div class="ranking-row ${team.rank === 1 ? "leader" : ""}" style="--team-color: ${team.color}">
         <div class="ranking-left">
           <div class="ranking-badge">${team.rank}</div>
           <div class="ranking-name">${escapeHtml(team.name)}</div>
@@ -46,9 +48,10 @@ export function renderScoreboard(state) {
     .map((team, index) => {
       const rank = rankMap.get(index) || 1;
       const bumpClass = state.lastChangedIndex === index ? "bump" : "";
+      const teamColor = team.color || defaultColors[index % defaultColors.length];
 
       return `
-        <article class="team-card ${rank === 1 ? "top-1" : ""}">
+        <article class="team-card ${rank === 1 ? "top-1" : ""}" style="--team-color: ${teamColor}">
           <div class="team-top">
             <div class="rank-badge">E${index + 1}</div>
             <div class="team-name-wrap">

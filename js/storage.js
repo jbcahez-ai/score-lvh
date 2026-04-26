@@ -22,6 +22,7 @@ export function hydrateState(state) {
       .filter((team) => team && typeof team.name === "string")
       .map((team, index) => ({
         name: team.name || `Équipe ${index + 1}`,
+        color: typeof team.color === "string" && /^#[0-9A-Fa-f]{6}$/.test(team.color) ? team.color : null,
         score: Number.isFinite(team.score) ? Math.max(0, team.score) : 0
       }));
   } catch (error) {

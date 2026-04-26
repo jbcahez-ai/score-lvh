@@ -1,4 +1,5 @@
 import { eventNameInput, teamCountSelect, teamInputs } from "./dom.js";
+import { defaultColors } from "./state.js";
 
 export function initializeTeamCountOptions() {
   for (let i = 2; i <= 18; i++) {
@@ -12,7 +13,14 @@ export function initializeTeamCountOptions() {
 
 export function renderTeamInputs() {
   const count = Number(teamCountSelect.value);
-  const previous = Array.from(teamInputs.querySelectorAll("input")).map((input) => input.value);
+  const previousInputs = Array.from(teamInputs.querySelectorAll("input"));
+  const previousColors = Array.from(teamInputs.querySelectorAll('input[type="color"]'));
+  
+  const previous = previousInputs.map((input, i) => ({
+    name: input.value,
+    color: previousColors[i]?.value || defaultColors[i % defaultColors.length]
+  }));
+  
   teamInputs.innerHTML = "";
 
   for (let i = 0; i < count; i++) {
@@ -23,13 +31,20 @@ export function renderTeamInputs() {
     index.className = "team-index chalk";
     index.textContent = `E${i + 1}`;
 
+    const colorInput = document.createElement("input");
+    colorInput.type = "color";
+    colorInput.className = "team-color";
+    colorInput.value = previous[i]?.color || defaultColors[i % defaultColors.length];
+    colorInput.setAttribute("aria-label", `Couleur de l'équipe ${i + 1}`);
+
     const input = document.createElement("input");
     input.type = "text";
     input.maxLength = 30;
     input.placeholder = `Nom de l'équipe ${i + 1}`;
-    input.value = previous[i] || `Équipe ${i + 1}`;
+    input.value = previous[i]?.name || `Équipe ${i + 1}`;
 
     row.appendChild(index);
+    row.appendChild(colorInput);
     row.appendChild(input);
     teamInputs.appendChild(row);
   }
@@ -40,14 +55,21 @@ export function syncFormFromState(state) {
   eventNameInput.value = state.eventName;
   teamCountSelect.value = String(Math.min(Math.max(state.teams.length, 2), 18));
   renderTeamInputs();
-  const inputs = Array.from(teamInputs.querySelectorAll("input"));
+  const inputs = Array.from(teamInputs.querySelectorAll('input[type="text"]'));
+  const colors = Array.from(teamInputs.querySelectorAll('input[type="color"]'));
   inputs.forEach((input, index) => {
     input.value = state.teams[index]?.name || `Équipe ${index + 1}`;
+  });
+  colors.forEach((color, index) => {
+    color.value = state.teams[index]?.color || defaultColors[index % defaultColors.length];
   });
 }
 
 export function collectFormData(state) {
-  const names = Array.from(teamInputs.querySelectorAll("input")).map((input, index) => {
+  const inputs = Array.from(teamInputs.querySelectorAll('input[type="text"]'));
+  const colors = Array.from(teamInputs.querySelectorAll('input[type="color"]'));
+  
+  const names = inputs.map((input, index) => {
     const value = input.value.trim();
     return value || `Équipe ${index + 1}`;
   });
@@ -55,8 +77,11 @@ export function collectFormData(state) {
   state.eventName = eventNameInput.value.trim() || "Tournoi";
 
   const previousScores = new Map(state.teams.map((team) => [team.name, team.score]));
-  state.teams = names.map((name) => ({
+  const previousColors = new Map(state.teams.map((team) => [team.name, team.color]));
+  
+  state.teams = names.map((name, index) => ({
     name,
+    color: colors[index]?.value || previousColors.get(name) || defaultColors[index % defaultColors.length],
     score: previousScores.get(name) || 0
   }));
 }
@@ -66,7 +91,12 @@ export function loadDemo() {
   teamCountSelect.value = "6";
   renderTeamInputs();
   const demoNames = ["Les 456", "Peaky Quizzers", "Team Hawkins", "Les Dragons", "Casa d'Ambiance", "Upside Down"];
-  Array.from(teamInputs.querySelectorAll("input")).forEach((input, index) => {
+  const inputs = Array.from(teamInputs.querySelectorAll('input[type="text"]'));
+  const colors = Array.from(teamInputs.querySelectorAll('input[type="color"]'));
+  inputs.forEach((input, index) => {
     input.value = demoNames[index] || `Équipe ${index + 1}`;
+  });
+  colors.forEach((color, index) => {
+    color.value = defaultColors[index % defaultColors.length];
   });
 }
