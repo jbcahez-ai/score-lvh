@@ -13,13 +13,8 @@ export function initializeTeamCountOptions() {
 
 export function renderTeamInputs() {
   const count = Number(teamCountSelect.value);
-  const previousInputs = Array.from(teamInputs.querySelectorAll("input"));
-  const previousColors = Array.from(teamInputs.querySelectorAll('input[type="color"]'));
-  
-  const previous = previousInputs.map((input, i) => ({
-    name: input.value,
-    color: previousColors[i]?.value || defaultColors[i % defaultColors.length]
-  }));
+  const previousNames = Array.from(teamInputs.querySelectorAll('input[type="text"]')).map((input) => input.value);
+  const previousColors = Array.from(teamInputs.querySelectorAll('input[type="color"]')).map((input) => input.value);
   
   teamInputs.innerHTML = "";
 
@@ -34,14 +29,14 @@ export function renderTeamInputs() {
     const colorInput = document.createElement("input");
     colorInput.type = "color";
     colorInput.className = "team-color";
-    colorInput.value = previous[i]?.color || defaultColors[i % defaultColors.length];
+    colorInput.value = previousColors[i] || defaultColors[i % defaultColors.length];
     colorInput.setAttribute("aria-label", `Couleur de l'équipe ${i + 1}`);
 
     const input = document.createElement("input");
     input.type = "text";
     input.maxLength = 30;
     input.placeholder = `Nom de l'équipe ${i + 1}`;
-    input.value = previous[i]?.name || `Équipe ${i + 1}`;
+    input.value = previousNames[i] || `Équipe ${i + 1}`;
 
     row.appendChild(index);
     row.appendChild(colorInput);

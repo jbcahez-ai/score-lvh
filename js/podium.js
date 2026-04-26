@@ -3,14 +3,15 @@ import { defaultColors } from "./state.js";
 import { escapeHtml } from "./utils.js";
 
 export function renderPodium(state) {
-  // Sort teams by score (descending)
-  const sortedTeams = [...state.teams]
+  // Sort teams by score (descending) while preserving original index
+  const sortedTeams = state.teams
+    .map((team, index) => ({ ...team, originalIndex: index }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3); // Top 3
 
   // Pad with placeholders if less than 3 teams
   while (sortedTeams.length < 3) {
-    sortedTeams.push({ name: "-", score: 0, color: "#666" });
+    sortedTeams.push({ name: "-", score: 0, color: "#666", originalIndex: -1 });
   }
 
   // Render podium in order: 2nd, 1st, 3rd (center is first)
@@ -19,7 +20,8 @@ export function renderPodium(state) {
 
   podiumGrid.innerHTML = podiumOrder
     .map((team, index) => {
-      const color = team.color || defaultColors[index % defaultColors.length];
+      // Use the team's own color, or fall back to default based on original index
+      const color = team.color || defaultColors[team.originalIndex % defaultColors.length];
       return `
         <article class="podium-card ${positions[index]}" style="--team-color: ${color}">
           <div class="podium-rank">${index + 1}</div>
