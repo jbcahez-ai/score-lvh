@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Score Le Voyage Heure</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <section id="setupScreen" class="screen active">
+      <div class="hero">
+        <img src="logo.png" alt="Logo Le Voyage Heure" class="logo" />
+        <div class="hero-text">
+          <h1 class="title chalk">Score Le Voyage Heure</h1>
+        </div>
+      </div>
+
+      <div class="setup-shell">
+        <h2 class="section-title chalk">Configuration du quiz</h2>
+        <p class="section-help">Renseigne le nom du tournoi, le nombre d'équipes, puis le nom de chaque équipe. Ensuite, passe à l'écran score pour afficher le classement en direct sur tablette ou télévision.</p>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="eventName">Nom du tournoi / quiz</label>
+            <input id="eventName" type="text" placeholder="Ex. Quiz séries TV - Jeudi soir" maxlength="60" />
+          </div>
+          <div class="field">
+            <label for="teamCount">Nombre d'équipes</label>
+            <select id="teamCount"></select>
+          </div>
+        </div>
+
+        <div id="teamInputs" class="team-list-editor"></div>
+
+        <div class="button-row">
+          <button id="nextBtn" class="btn btn-primary">Suivant</button>
+          <button id="demoBtn" class="btn btn-secondary">Charger une démo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="scoreScreen" class="screen">
+      <div class="scoreboard-shell">
+        <div class="scoreboard-header">
+          <img src="logo.png" alt="Logo Le Voyage Heure" class="logo" />
+
+          <div>
+            <h1 id="scoreboardTitle" class="scoreboard-main-title chalk">Tournoi</h1>
+            <p id="scoreboardSubtitle" class="scoreboard-subtitle">0 équipe</p>
+          </div>
+
+          <div class="scoreboard-actions">
+            <button id="backBtn" class="btn btn-secondary">Équipes</button>
+            <button id="resetBtn" class="btn btn-secondary">Remise à zéro</button>
+            <button id="fullscreenBtn" class="btn btn-primary">Plein écran</button>
+          </div>
+        </div>
+
+        <div id="teamsGrid" class="teams-grid"></div>
+        <p class="footer-note">Affichage pensé pour être casté sur une TV dans le bar et suivi en direct par tout le monde.</p>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
